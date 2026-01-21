@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basecamp Coffee - Discover Your Coffee Personality</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FDF8F4;
+      color: #2C2420;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quiz-container {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Progress dots */
+    .progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      padding-top: 12px;
+    }
+
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #E0D5CC;
+      transition: background 0.3s ease;
+    }
+
+    .progress-dot.filled {
+      background: #6B5B4F;
+    }
+
+    /* Welcome screen */
+    .welcome {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+
+    .welcome h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #2C2420;
+    }
+
+    .welcome p {
+      font-size: 16px;
+      color: #6B5B4F;
+      margin-bottom: 40px;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: #2D5A3D;
+      color: white;
+      border: none;
+      padding: 16px 48px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #234830;
+      transform: scale(1.02);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Question screens */
+    .question-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 24px;
+      color: #2C2420;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option {
+      background: white;
+      border: 2px solid #E0D5CC;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+    }
+
+    .option:hover {
+      border-color: #6B5B4F;
+      background: #FAF6F2;
+    }
+
+    .option:active, .option.selected {
+      border-color: #2D5A3D;
+      background: #E8F0EA;
+    }
+
+    /* Vibe pick grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .option-vibe {
+      background: white;
+      border: 2px solid #E0D5CC;
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-vibe:hover {
+      border-color: #6B5B4F;
+      background: #FAF6F2;
+    }
+
+    .option-vibe:active, .option-vibe.selected {
+      border-color: #2D5A3D;
+      background: #E8F0EA;
+    }
+
+    .option-vibe .emoji {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .option-vibe .label {
+      font-size: 13px;
+      color: #6B5B4F;
+      line-height: 1.3;
+    }
+
+    /* Micro feedback */
+    .micro-feedback {
+      text-align: center;
+      font-size: 14px;
+      color: #6B5B4F;
+      font-style: italic;
+      margin-top: 24px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .micro-feedback.show {
+      opacity: 1;
+    }
+
+    /* Loading screen */
+    .loading {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .loading-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .loading p {
+      font-size: 18px;
+      color: #6B5B4F;
+    }
+
+    /* Result screen */
+    .result {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 20px;
+    }
+
+    .result-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .result-type {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .result-tagline {
+      font-size: 16px;
+      color: #6B5B4F;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .result-description {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #4A4440;
+      margin-bottom: 28px;
+      max-width: 320px;
+    }
+
+    .result-divider {
+      width: 60px;
+      height: 2px;
+      background: #E0D5CC;
+      margin-bottom: 28px;
+    }
+
+    .drink-section h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6B5B4F;
+      margin-bottom: 8px;
+    }
+
+    .drink-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 28px;
+      color: #2C2420;
+    }
+
+    .btn-order {
+      width: 100%;
+      max-width: 280px;
+      margin-bottom: 16px;
+    }
+
+    .secondary-actions {
+      display: flex;
+      gap: 24px;
+    }
+
+    .btn-secondary {
+      background: none;
+      border: none;
+      color: #6B5B4F;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      color: #2C2420;
+    }
+
+    /* Type-specific colors */
+    .type-habit { background: #D4A574; }
+    .type-explorer { background: #2D5A3D; }
+    .type-smooth { background: #C4956A; }
+    .type-purist { background: #4A3728; }
+    .type-social { background: #E8846B; }
+    .type-fueler { background: #5B7B8C; }
+
+    .text-habit { color: #D4A574; }
+    .text-explorer { color: #2D5A3D; }
+    .text-smooth { color: #C4956A; }
+    .text-purist { color: #4A3728; }
+    .text-social { color: #E8846B; }
+    .text-fueler { color: #5B7B8C; }
+
+    /* Dark mode - follows system preference */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1C1917;
+        color: #F5F0EB;
+      }
+
+      .welcome h1 {
+        color: #F5F0EB;
+      }
+
+      .welcome p {
+        color: #A8A29E;
+      }
+
+      .progress-dot {
+        background: #44403C;
+      }
+
+      .progress-dot.filled {
+        background: #A8A29E;
+      }
+
+      .question-text {
+        color: #F5F0EB;
+      }
+
+      .option {
+        background: #292524;
+        border-color: #44403C;
+        color: #F5F0EB;
+      }
+
+      .option:hover {
+        border-color: #78716C;
+        background: #352F2D;
+      }
+
+      .option:active, .option.selected {
+        border-color: #4ADE80;
+        background: #1A2E1F;
+      }
+
+      .option-vibe {
+        background: #292524;
+        border-color: #44403C;
+        color: #F5F0EB;
+      }
+
+      .option-vibe:hover {
+        border-color: #78716C;
+        background: #352F2D;
+      }
+
+      .option-vibe:active, .option-vibe.selected {
+        border-color: #4ADE80;
+        background: #1A2E1F;
+      }
+
+      .option-vibe .label {
+        color: #A8A29E;
+      }
+
+      .micro-feedback {
+        color: #A8A29E;
+      }
+
+      .loading p {
+        color: #A8A29E;
+      }
+
+      .result-tagline {
+        color: #A8A29E;
+      }
+
+      .result-description {
+        color: #D6D3D1;
+      }
+
+      .result-divider {
+        background: #44403C;
+      }
+
+      .drink-section h3 {
+        color: #A8A29E;
+      }
+
+      .drink-name {
+        color: #F5F0EB;
+      }
+
+      .btn-primary {
+        background: #4ADE80;
+        color: #1C1917;
+      }
+
+      .btn-primary:hover {
+        background: #22C55E;
+      }
+
+      .btn-secondary {
+        color: #A8A29E;
+      }
+
+      .btn-secondary:hover {
+        color: #F5F0EB;
+      }
+
+      /* Adjusted type colors for dark mode readability */
+      .text-explorer { color: #4ADE80; }
+      .text-purist { color: #A8846B; }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+
+    <!-- Welcome Screen -->
+    <div class="screen active" id="welcome">
+      <div class="welcome">
+        <div class="welcome-icon">☕</div>
+        <h1>Discover Your Coffee Personality</h1>
+        <p>6 quick questions to find your perfect cup</p>
+        <button class="btn-primary" onclick="startQuiz()">Let's Go</button>
+      </div>
+      <div class="progress">
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+    </div>
+
+    <!-- Question 1 -->
+    <div class="screen" id="q1">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">You walk into Basecamp. The barista smiles and asks "the usual?" You say...</p>
+        <div class="options">
+          <button class="option" onclick="selectAnswer(1, 'habit')">"Yes please. You know me."</button>
+          <button class="option" onclick="selectAnswer(1, 'explorer')">"Actually, what's new today?"</button>
+          <button class="option" onclick="selectAnswer(1, 'social')">"Hmm, what do YOU like right now?"</button>
+          <button class="option" onclick="selectAnswer(1, 'fueler')">"Whatever's fastest—I'm on a mission."</button>
+        </div>
+        <p class="micro-feedback" id="feedback1">Noted. We see you.</p>
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="screen" id="q2">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">It's 7:45am. You have exactly 15 minutes before your day gets chaotic. You...</p>
+        <div class="options">
+          <button class="option" onclick="selectAnswer(2, 'habit')">Grab your usual—no thinking required</button>
+          <button class="option" onclick="selectAnswer(2, 'purist')">Take the 15 minutes. Coffee IS the moment.</button>
+          <button class="option" onclick="selectAnswer(2, 'smooth')">Make it sweet. You deserve a treat.</button>
+          <button class="option" onclick="selectAnswer(2, 'fueler')">Large. Dark. Now.</button>
+        </div>
+        <p class="micro-feedback" id="feedback2">Respect.</p>
+      </div>
+    </div>
+
+    <!-- Question 3 (Vibe Pick) -->
+    <div class="screen" id="q3">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">Pick the coffee moment that speaks to you:</p>
+        <div class="options-grid">
+          <button class="option-vibe" onclick="selectAnswer(3, 'purist')">
+            <div class="emoji">☀️</div>
+            <div class="label">Morning quiet, simple black mug</div>
+          </button>
+          <button class="option-vibe" onclick="selectAnswer(3, 'smooth')">
+            <div class="emoji">🎨</div>
+            <div class="label">Latte art, cozy corner</div>
+          </button>
+          <button class="option-vibe" onclick="selectAnswer(3, 'social')">
+            <div class="emoji">👋</div>
+            <div class="label">Friends laughing, crowded table</div>
+          </button>
+          <button class="option-vibe" onclick="selectAnswer(3, 'fueler')">
+            <div class="emoji">💻</div>
+            <div class="label">Laptop open, things to do</div>
+          </button>
+        </div>
+        <p class="micro-feedback" id="feedback3">A person of taste.</p>
+      </div>
+    </div>
+
+    <!-- Question 4 (Playful) -->
+    <div class="screen" id="q4">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">Your coffee becomes sentient and asks: "What do you want from this relationship?"</p>
+        <div class="options">
+          <button class="option" onclick="selectAnswer(4, 'habit')">"Consistency. Same way. Every. Time."</button>
+          <button class="option" onclick="selectAnswer(4, 'explorer')">"Adventure. Surprise me."</button>
+          <button class="option" onclick="selectAnswer(4, 'smooth')">"Comfort. Be warm, be sweet."</button>
+          <button class="option" onclick="selectAnswer(4, 'purist')">"Honesty. No frills."</button>
+          <button class="option" onclick="selectAnswer(4, 'social')">"Company. You're my excuse to be here."</button>
+          <button class="option" onclick="selectAnswer(4, 'fueler')">"Efficiency. Do your job."</button>
+        </div>
+        <p class="micro-feedback" id="feedback4">Okay, that was revealing.</p>
+      </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="screen" id="q5">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">Be honest:</p>
+        <div class="options">
+          <button class="option" onclick="selectAnswer(5, 'habit')">"I like my coffee like I like my mornings: predictable."</button>
+          <button class="option" onclick="selectAnswer(5, 'explorer')">"I like my coffee like I like my weekends: an adventure."</button>
+          <button class="option" onclick="selectAnswer(5, 'smooth')">"I like my coffee like I like my desserts: a little indulgent."</button>
+          <button class="option" onclick="selectAnswer(5, 'purist')">"I like my coffee like I like my conversations: no fluff."</button>
+        </div>
+        <p class="micro-feedback" id="feedback5">Same, honestly.</p>
+      </div>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="screen" id="q6">
+      <div class="progress">
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+        <div class="progress-dot filled"></div>
+      </div>
+      <div class="question-content">
+        <p class="question-text">Which one is secretly you?</p>
+        <div class="options">
+          <button class="option" onclick="selectAnswer(6, 'social')">"The barista knows my name and it makes my week."</button>
+          <button class="option" onclick="selectAnswer(6, 'fueler')">"I've calculated my exact caffeine-to-minute ratio."</button>
+          <button class="option" onclick="selectAnswer(6, 'habit')">"Same order for years. Don't @ me."</button>
+          <button class="option" onclick="selectAnswer(6, 'smooth')">"I've photographed my latte art before."</button>
+          <button class="option" onclick="selectAnswer(6, 'purist')">"I've asked about bean origin and listened."</button>
+          <button class="option" onclick="selectAnswer(6, 'explorer')">"Ordered something I couldn't pronounce."</button>
+        </div>
+        <p class="micro-feedback" id="feedback6">We won't tell anyone.</p>
+      </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="screen" id="loading">
+      <div class="loading">
+        <div class="loading-icon">☕</div>
+        <p>Brewing your results...</p>
+      </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="screen" id="result">
+      <div class="result">
+        <div class="result-icon" id="resultIcon">🧭</div>
+        <h2 class="result-type" id="resultType">Bold Explorer</h2>
+        <p class="result-tagline" id="resultTagline">"Surprise me is my love language"</p>
+        <p class="result-description" id="resultDescription">
+          You ask "what's new?" before the barista says hello. Predictable? Never. You trust us to surprise you.
+        </p>
+        <div class="result-divider"></div>
+        <div class="drink-section">
+          <h3>Your Signature Drink</h3>
+          <p class="drink-name" id="resultDrink">Ethiopian Single Origin Pour Over</p>
+        </div>
+        <button class="btn-primary btn-order" id="orderBtn">Order This Drink</button>
+        <div class="secondary-actions">
+          <button class="btn-secondary" onclick="saveToProfile()">Save to Profile</button>
+          <button class="btn-secondary" onclick="shareResult()">Share</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Quiz state
+    let currentQuestion = 0;
+    let answers = {
+      habit: 0,
+      explorer: 0,
+      smooth: 0,
+      purist: 0,
+      social: 0,
+      fueler: 0
+    };
+    let q4Answer = null; // Tiebreaker
+
+    // Personality data
+    const personalities = {
+      habit: {
+        name: "Creature of Habit",
+        tagline: '"I found my forever drink"',
+        description: "You found your drink. The baristas start making it when you walk in. Some call it predictable—you call it knowing what you want.",
+        drink: "Your Usual (Classic House Drip)",
+        icon: "🏠",
+        colorClass: "type-habit",
+        textClass: "text-habit"
+      },
+      explorer: {
+        name: "Bold Explorer",
+        tagline: '"Surprise me is my love language"',
+        description: "You ask \"what's new?\" before the barista says hello. Predictable? Never. You trust us to surprise you.",
+        drink: "Ethiopian Single Origin Pour Over",
+        icon: "🧭",
+        colorClass: "type-explorer",
+        textClass: "text-explorer"
+      },
+      smooth: {
+        name: "Smooth Operator",
+        tagline: '"Sweet, creamy, unapologetic"',
+        description: "Creamy, sweet, unapologetic. You want coffee that feels like a treat. You know what you like, and you're not sorry about it.",
+        drink: "Oat Milk Vanilla Latte",
+        icon: "🎨",
+        colorClass: "type-smooth",
+        textClass: "text-smooth"
+      },
+      purist: {
+        name: "The Purist",
+        tagline: '"Just the coffee, please"',
+        description: "You want to taste the coffee, not the syrup. Black or a cortado, keep it simple. For you, less is more.",
+        drink: "Cortado",
+        icon: "☕",
+        colorClass: "type-purist",
+        textClass: "text-purist"
+      },
+      social: {
+        name: "Social Sipper",
+        tagline: '"I\'m here for the vibes"',
+        description: "You're here for the vibe, not the caffeine. The corner table, the familiar faces, the conversation. Coffee's good—company's better.",
+        drink: "Shareable Cold Brew Pitcher",
+        icon: "👋",
+        colorClass: "type-social",
+        textClass: "text-social"
+      },
+      fueler: {
+        name: "Functional Fueler",
+        tagline: '"Coffee is my productivity hack"',
+        description: "Coffee is a tool and you respect it. Large, dark, let's go. You've got things to do.",
+        drink: "Red Eye (Drip + Espresso Shot)",
+        icon: "⚡",
+        colorClass: "type-fueler",
+        textClass: "text-fueler"
+      }
+    };
+
+    function startQuiz() {
+      showScreen('q1');
+      currentQuestion = 1;
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function selectAnswer(question, type) {
+      // Add to score
+      answers[type]++;
+
+      // Store Q4 answer for tiebreaker
+      if (question === 4) {
+        q4Answer = type;
+      }
+
+      // Show feedback
+      const feedback = document.getElementById('feedback' + question);
+      feedback.classList.add('show');
+
+      // Mark selected option
+      const options = document.querySelectorAll(`#q${question} .option, #q${question} .option-vibe`);
+      options.forEach(opt => opt.classList.remove('selected'));
+      event.target.closest('.option, .option-vibe').classList.add('selected');
+
+      // Auto-advance after delay
+      setTimeout(() => {
+        if (question < 6) {
+          showScreen('q' + (question + 1));
+        } else {
+          showLoading();
+        }
+      }, 600);
+    }
+
+    function showLoading() {
+      showScreen('loading');
+      setTimeout(() => {
+        showResult();
+      }, 2000);
+    }
+
+    function showResult() {
+      // Calculate winner
+      let maxScore = 0;
+      let winners = [];
+
+      for (let type in answers) {
+        if (answers[type] > maxScore) {
+          maxScore = answers[type];
+          winners = [type];
+        } else if (answers[type] === maxScore) {
+          winners.push(type);
+        }
+      }
+
+      // Tiebreaker: use Q4 answer
+      let result;
+      if (winners.length > 1 && q4Answer && winners.includes(q4Answer)) {
+        result = q4Answer;
+      } else {
+        result = winners[0];
+      }
+
+      // Display result
+      const p = personalities[result];
+      document.getElementById('resultIcon').textContent = p.icon;
+      document.getElementById('resultIcon').className = 'result-icon ' + p.colorClass;
+      document.getElementById('resultType').textContent = p.name;
+      document.getElementById('resultType').className = 'result-type ' + p.textClass;
+      document.getElementById('resultTagline').textContent = p.tagline;
+      document.getElementById('resultDescription').textContent = p.description;
+      document.getElementById('resultDrink').textContent = p.drink;
+
+      showScreen('result');
+    }
+
+    function saveToProfile() {
+      alert('Saved to your Basecamp Rewards profile!');
+    }
+
+    function shareResult() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'My Coffee Personality',
+          text: 'I just discovered my coffee personality at Basecamp Coffee! Take the quiz to find yours.',
+          url: window.location.href
+        });
+      } else {
+        alert('Share this link with friends:\n' + window.location.href);
+      }
+    }
+  </script>
+</body>
+</html>
