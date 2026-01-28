@@ -304,8 +304,29 @@
     .drink-name {
       font-size: 18px;
       font-weight: 600;
-      margin-bottom: 28px;
+      margin-bottom: 8px;
       color: #2C2420;
+    }
+
+    .result-intro {
+      font-size: 14px;
+      color: #6B5B4F;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .result-welcome {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2D5A3D;
+      margin-bottom: 20px;
+    }
+
+    .barista-tip {
+      font-size: 13px;
+      color: #6B5B4F;
+      font-style: italic;
+      margin-bottom: 24px;
     }
 
     .btn-order {
@@ -454,6 +475,18 @@
 
       .btn-secondary:hover {
         color: #F5F0EB;
+      }
+
+      .result-intro {
+        color: #A8A29E;
+      }
+
+      .result-welcome {
+        color: #4ADE80;
+      }
+
+      .barista-tip {
+        color: #A8A29E;
       }
 
       /* Adjusted type colors for dark mode readability */
@@ -642,16 +675,19 @@
     <!-- Result Screen -->
     <div class="screen" id="result">
       <div class="result">
+        <p class="result-intro" id="resultIntro">We had a feeling...</p>
         <div class="result-icon" id="resultIcon">🧭</div>
         <h2 class="result-type" id="resultType">Bold Explorer</h2>
         <p class="result-tagline" id="resultTagline">"Surprise me is my love language"</p>
         <p class="result-description" id="resultDescription">
           You ask "what's new?" before the barista says hello. Predictable? Never. You trust us to surprise you.
         </p>
+        <p class="result-welcome" id="resultWelcome">Welcome to the Explorer crew.</p>
         <div class="result-divider"></div>
         <div class="drink-section">
-          <h3>Your Signature Drink</h3>
+          <h3 id="drinkIntro">Explorers swear by</h3>
           <p class="drink-name" id="resultDrink">Ethiopian Single Origin Pour Over</p>
+          <p class="barista-tip" id="baristaTip">Your baristas know what Explorers love.</p>
         </div>
         <button class="btn-primary btn-order" id="orderBtn">Order This Drink</button>
         <div class="secondary-actions">
@@ -679,13 +715,16 @@
     // Personality data
     const personalities = {
       habit: {
-        name: "Creature of Habit",
-        tagline: '"I found my forever drink"',
-        description: "You found your drink. The baristas start making it when you walk in. Some call it predictable—you call it knowing what you want.",
-        drink: "Your Usual (Classic House Drip)",
+        name: "The Regular",
+        tagline: '"I know what I love"',
+        description: "You found your drink. The baristas start making it when you walk in. That's not boring—that's confidence.",
+        drink: "Classic House Drip",
         icon: "🏠",
         colorClass: "type-habit",
-        textClass: "text-habit"
+        textClass: "text-habit",
+        plural: "Regulars",
+        welcome: "Welcome to the Regulars crew.",
+        baristaTip: "Your baristas know what Regulars love."
       },
       explorer: {
         name: "Bold Explorer",
@@ -694,7 +733,10 @@
         drink: "Ethiopian Single Origin Pour Over",
         icon: "🧭",
         colorClass: "type-explorer",
-        textClass: "text-explorer"
+        textClass: "text-explorer",
+        plural: "Explorers",
+        welcome: "Welcome to the Explorer crew.",
+        baristaTip: "Your baristas know what Explorers love."
       },
       smooth: {
         name: "Smooth Operator",
@@ -703,7 +745,10 @@
         drink: "Oat Milk Vanilla Latte",
         icon: "🎨",
         colorClass: "type-smooth",
-        textClass: "text-smooth"
+        textClass: "text-smooth",
+        plural: "Smooth Operators",
+        welcome: "Welcome to the Smooth Operator crew.",
+        baristaTip: "Your baristas know what Smooth Operators love."
       },
       purist: {
         name: "The Purist",
@@ -712,7 +757,10 @@
         drink: "Cortado",
         icon: "☕",
         colorClass: "type-purist",
-        textClass: "text-purist"
+        textClass: "text-purist",
+        plural: "Purists",
+        welcome: "Welcome to the Purist crew.",
+        baristaTip: "Your baristas know what Purists love."
       },
       social: {
         name: "Social Sipper",
@@ -721,7 +769,10 @@
         drink: "Shareable Cold Brew Pitcher",
         icon: "👋",
         colorClass: "type-social",
-        textClass: "text-social"
+        textClass: "text-social",
+        plural: "Social Sippers",
+        welcome: "Welcome to the Social Sipper crew.",
+        baristaTip: "Your baristas know what Social Sippers love."
       },
       fueler: {
         name: "Functional Fueler",
@@ -730,7 +781,10 @@
         drink: "Red Eye (Drip + Espresso Shot)",
         icon: "⚡",
         colorClass: "type-fueler",
-        textClass: "text-fueler"
+        textClass: "text-fueler",
+        plural: "Fuelers",
+        welcome: "Welcome to the Fueler crew.",
+        baristaTip: "Your baristas know what Fuelers love."
       }
     };
 
@@ -809,7 +863,10 @@
       document.getElementById('resultType').className = 'result-type ' + p.textClass;
       document.getElementById('resultTagline').textContent = p.tagline;
       document.getElementById('resultDescription').textContent = p.description;
+      document.getElementById('resultWelcome').textContent = p.welcome;
+      document.getElementById('drinkIntro').textContent = p.plural + ' swear by';
       document.getElementById('resultDrink').textContent = p.drink;
+      document.getElementById('baristaTip').textContent = p.baristaTip;
 
       showScreen('result');
     }

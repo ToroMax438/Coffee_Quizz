@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style 4: Warm & Cozy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(160deg, #f5ebe0 0%, #d5bdaf 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .style-label {
+            background: #6b4423;
+            color: #f5ebe0;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 400;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(107, 68, 35, 0.15);
+        }
+        .progress {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d5bdaf;
+        }
+        .progress-dot.active {
+            background: #6b4423;
+            width: 24px;
+            border-radius: 10px;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: #3d2314;
+            margin-bottom: 40px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .answer {
+            background: #f5ebe0;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 18px 24px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #5c4033;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .answer:hover {
+            border-color: #6b4423;
+            background: #fff;
+        }
+        .answer.selected {
+            background: #6b4423;
+            color: #f5ebe0;
+            border-color: #6b4423;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="style-label">Style 4: Warm & Cozy</div>
+        <div class="card">
+            <div class="progress">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <h1>Pick a color that speaks to you:</h1>
+            <div class="answers">
+                <div class="answer">Warm sunset orange</div>
+                <div class="answer selected">Calm forest green</div>
+                <div class="answer">Soft morning blue</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

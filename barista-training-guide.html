@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Personality Quiz - Barista Guide</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page-break { page-break-after: always; }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.5;
+      padding: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #2D5A3D;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      margin-top: 24px;
+      color: #1a1a1a;
+      border-bottom: 2px solid #2D5A3D;
+      padding-bottom: 4px;
+    }
+
+    h2:first-of-type {
+      margin-top: 0;
+    }
+
+    .intro {
+      background: #F0F7F2;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      border-left: 4px solid #2D5A3D;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    /* Types Grid */
+    .types-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .type-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafafa;
+    }
+
+    .type-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .type-icon {
+      font-size: 20px;
+    }
+
+    .type-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .type-tagline {
+      font-size: 11px;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .type-drink {
+      font-size: 12px;
+      background: white;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .type-drink strong {
+      color: #2D5A3D;
+    }
+
+    /* Scripts */
+    .script-box {
+      background: #FFF9E6;
+      border: 1px solid #E6D9A6;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .script-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #8B7355;
+      margin-bottom: 4px;
+    }
+
+    .script-text {
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    /* Do / Don't */
+    .do-dont {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .do-box, .dont-box {
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .do-box {
+      background: #E8F5E9;
+      border: 1px solid #A5D6A7;
+    }
+
+    .dont-box {
+      background: #FFEBEE;
+      border: 1px solid #EF9A9A;
+    }
+
+    .do-box h3, .dont-box h3 {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .do-box h3 { color: #2E7D32; }
+    .dont-box h3 { color: #C62828; }
+
+    .do-box ul, .dont-box ul {
+      font-size: 12px;
+      padding-left: 16px;
+      margin: 0;
+    }
+
+    .do-box li, .dont-box li {
+      margin-bottom: 4px;
+    }
+
+    /* FAQ */
+    .faq-item {
+      margin-bottom: 12px;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .faq-a {
+      font-size: 13px;
+      color: #444;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+    }
+
+    .highlight {
+      background: #FFF3CD;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Dark mode - follows system preference */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #1C1917;
+        color: #F5F0EB;
+      }
+
+      h1 {
+        color: #4ADE80;
+      }
+
+      .subtitle {
+        color: #A8A29E;
+      }
+
+      h2 {
+        color: #F5F0EB;
+        border-bottom-color: #4ADE80;
+      }
+
+      .intro {
+        background: #292524;
+        border-left-color: #4ADE80;
+      }
+
+      .type-card {
+        background: #292524;
+        border-color: #44403C;
+      }
+
+      .type-name {
+        color: #F5F0EB;
+      }
+
+      .type-tagline {
+        color: #A8A29E;
+      }
+
+      .type-drink {
+        background: #1C1917;
+        border-color: #44403C;
+        color: #D6D3D1;
+      }
+
+      .type-drink strong {
+        color: #4ADE80;
+      }
+
+      .script-box {
+        background: #352F2D;
+        border-color: #5C5347;
+      }
+
+      .script-label {
+        color: #C4A77D;
+      }
+
+      .script-text {
+        color: #F5F0EB;
+      }
+
+      .do-box {
+        background: #1A2E1F;
+        border-color: #2D5A3D;
+      }
+
+      .do-box h3 {
+        color: #4ADE80;
+      }
+
+      .do-box ul {
+        color: #D6D3D1;
+      }
+
+      .dont-box {
+        background: #2E1A1A;
+        border-color: #5A2D2D;
+      }
+
+      .dont-box h3 {
+        color: #F87171;
+      }
+
+      .dont-box ul {
+        color: #D6D3D1;
+      }
+
+      .faq-q {
+        color: #F5F0EB;
+      }
+
+      .faq-a {
+        color: #A8A29E;
+      }
+
+      .footer {
+        border-top-color: #44403C;
+        color: #78716C;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Coffee Personality Quiz</h1>
+  <p class="subtitle">Barista Quick Guide</p>
+
+  <div class="intro">
+    <p><strong>What is it?</strong> A 60-second quiz in the app that helps members discover their coffee personality and signature drink. It's what we already do at the counter - now in the app.</p>
+  </div>
+
+  <h2>The 6 Types</h2>
+
+  <div class="types-grid">
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">🏠</span>
+        <span class="type-name">The Regular</span>
+      </div>
+      <p class="type-tagline">"I know what I love"</p>
+      <p class="type-drink"><strong>Drink:</strong> Their usual (House Drip)</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">🧭</span>
+        <span class="type-name">Bold Explorer</span>
+      </div>
+      <p class="type-tagline">"Surprise me is my love language"</p>
+      <p class="type-drink"><strong>Drink:</strong> Seasonal Single Origin</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">🎨</span>
+        <span class="type-name">Smooth Operator</span>
+      </div>
+      <p class="type-tagline">"Sweet, creamy, unapologetic"</p>
+      <p class="type-drink"><strong>Drink:</strong> Oat Milk Vanilla Latte</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">☕</span>
+        <span class="type-name">The Purist</span>
+      </div>
+      <p class="type-tagline">"Just the coffee, please"</p>
+      <p class="type-drink"><strong>Drink:</strong> Cortado</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">👋</span>
+        <span class="type-name">Social Sipper</span>
+      </div>
+      <p class="type-tagline">"I'm here for the vibes"</p>
+      <p class="type-drink"><strong>Drink:</strong> Cold Brew Pitcher</p>
+    </div>
+
+    <div class="type-card">
+      <div class="type-header">
+        <span class="type-icon">⚡</span>
+        <span class="type-name">Functional Fueler</span>
+      </div>
+      <p class="type-tagline">"Coffee is my productivity hack"</p>
+      <p class="type-drink"><strong>Drink:</strong> Red Eye</p>
+    </div>
+  </div>
+
+  <h2>How to Bring It Up</h2>
+
+  <div class="script-box">
+    <p class="script-label">The Easy One</p>
+    <p class="script-text">"Hey, we just launched this thing to help you find your signature drink - takes like a minute on your phone. Wanna try it?"</p>
+  </div>
+
+  <div class="script-box">
+    <p class="script-label">For Regulars</p>
+    <p class="script-text">"You know how we always talk about what you should try next? We made a quiz for that. I'm curious what you'd get."</p>
+  </div>
+
+  <div class="script-box">
+    <p class="script-label">If They Ask for a Recommendation</p>
+    <p class="script-text">"Have you taken the coffee personality quiz in the app? It'll tell you exactly what to try."</p>
+  </div>
+
+  <h2>When to Mention It</h2>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <h3>✓ Good Times</h3>
+      <ul>
+        <li>Regulars you have rapport with</li>
+        <li>People lingering / working</li>
+        <li>Slow moments</li>
+        <li>When they ask for recommendations</li>
+        <li>After you hand them their drink</li>
+      </ul>
+    </div>
+    <div class="dont-box">
+      <h3>✗ Skip It</h3>
+      <ul>
+        <li>During rush (3+ drinks deep)</li>
+        <li>Customer seems in a hurry</li>
+        <li>Already mentioned it to them</li>
+        <li>They're on a phone call</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="font-size: 13px; color: #666; margin-bottom: 16px;"><strong>Remember:</strong> No pressure. This isn't a sales pitch - it's sharing something fun. If it doesn't feel natural, skip it.</p>
+
+  <h2>Quick FAQ</h2>
+
+  <div class="faq-item">
+    <p class="faq-q">"Where do I find it?"</p>
+    <p class="faq-a">"Open the Basecamp app - it's right on the home screen."</p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">"How long does it take?"</p>
+    <p class="faq-a">"Like 60 seconds. 6 quick questions."</p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">"What do I get?"</p>
+    <p class="faq-a">"Your coffee personality type and a signature drink recommendation."</p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">"Can I retake it?"</p>
+    <p class="faq-a">"Yeah, you can retake it anytime if your taste changes."</p>
+  </div>
+
+  <div class="faq-item">
+    <p class="faq-q">"What type are you?"</p>
+    <p class="faq-a">Share yours! It's a fun conversation starter.</p>
+  </div>
+
+  <div class="footer">
+    Basecamp Coffee — Coffee Personality Quiz — Barista Guide
+  </div>
+
+</body>
+</html>
